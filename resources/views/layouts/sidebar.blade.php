@@ -30,7 +30,7 @@
             </a>
         </nav>
         <div class="absolute bottom-0 w-full border-t border-slate-800 p-4 text-sm">
-            <div class="mb-2">
+            <div class="mb-2 font-bold">
                 {{ Auth::user()->name }}
             </div>
 
