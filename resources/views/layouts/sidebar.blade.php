@@ -21,8 +21,8 @@
                 Dashboard
             </a>
 
-            <a href="#" class="block px-4 py-2 rounded-lg text-sm hover:bg-slate-800">
-                Manajemen User
+            <a href="{{ route('users.index') }}" class="block px-4 py-2 rounded-lg text-sm hover:bg-slate-800">
+                Manajemen Pengguna
             </a>
 
             <a href="#" class="block px-4 py-2 rounded-lg text-sm hover:bg-slate-800">
