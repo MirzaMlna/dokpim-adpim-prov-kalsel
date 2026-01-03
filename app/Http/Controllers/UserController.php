@@ -22,21 +22,26 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'kode' => 'required|unique:users',
-            'name' => 'required',
+            'code' => 'required|unique:users',
+            'name' => 'required|string',
             'email' => 'required|email|unique:users',
             'nip' => 'nullable|unique:users',
-            'tanggal_lahir' => 'nullable|date',
-            'jabatan' => 'nullable|string',
+            'birth_date' => 'nullable|date',
+            'position' => 'nullable|string',
             'role' => 'required|in:super-admin,kepala,admin,staff',
             'password' => 'required|min:8',
+            'photo' => 'nullable|string',
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
 
         User::create($validated);
 
-        return redirect()->route('users.index')->with('success', 'User berhasil ditambahkan');
+        return redirect()
+            ->route('users.index')
+            ->with('success', 'User berhasil ditambahkan');
     }
 
     public function show(User $user)
@@ -52,14 +57,16 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $validated = $request->validate([
-            'kode' => 'required|unique:users,kode,' . $user->id,
-            'name' => 'required',
+            'code' => 'required|unique:users,code,' . $user->id,
+            'name' => 'required|string',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'nip' => 'nullable|unique:users,nip,' . $user->id,
-            'tanggal_lahir' => 'nullable|date',
-            'jabatan' => 'nullable|string',
+            'birth_date' => 'nullable|date',
+            'position' => 'nullable|string',
             'role' => 'required|in:super-admin,kepala,admin,staff',
             'password' => 'nullable|min:8',
+            'photo' => 'nullable|string',
+            'updated_at' => now(),
         ]);
 
         if ($request->filled('password')) {
@@ -70,12 +77,17 @@ class UserController extends Controller
 
         $user->update($validated);
 
-        return redirect()->route('users.index')->with('success', 'User berhasil diperbarui');
+        return redirect()
+            ->route('users.index')
+            ->with('success', 'User berhasil diperbarui');
     }
 
     public function destroy(User $user)
     {
         $user->delete();
-        return redirect()->route('users.index')->with('success', 'User berhasil dihapus');
+
+        return redirect()
+            ->route('users.index')
+            ->with('success', 'User berhasil dihapus');
     }
 }

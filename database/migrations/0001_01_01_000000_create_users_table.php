@@ -11,18 +11,18 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
 
-            // Identitas utama
-            $table->string('kode')->unique();              // Kode unik internal
+            // Identity
+            $table->string('code')->unique();
             $table->string('name');
             $table->string('email')->unique();
             $table->string('nip')->nullable()->unique();
 
-            // Data personal
-            $table->date('tanggal_lahir')->nullable();
-            $table->string('jabatan')->nullable();
-            $table->string('foto')->nullable();
+            // Personal data
+            $table->date('birth_date')->nullable();
+            $table->string('position')->nullable();
+            $table->string('photo')->nullable();
 
-            // Role & auth
+            // Authorization
             $table->enum('role', [
                 'super-admin',
                 'kepala',
@@ -36,6 +36,7 @@ return new class extends Migration
 
             $table->timestamps();
         });
+
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();

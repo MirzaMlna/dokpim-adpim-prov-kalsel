@@ -16,23 +16,23 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="font-sans antialiased bg-gray-100">
-    <div class="flex min-h-screen">
+<body class="font-sans antialiased bg-gray-100 overflow-hidden">
+    <div class="flex h-screen">
 
         {{-- Sidebar --}}
         @include('layouts.sidebar')
 
         {{-- Content --}}
-        <div class="flex-1 flex flex-col">
+        <div class="flex-1 flex flex-col overflow-hidden">
 
+            {{-- Mobile Navigation --}}
             <div class="block lg:hidden">
                 @include('layouts.navigation')
             </div>
 
-
             {{-- Page Heading --}}
             @isset($header)
-                <div class="bg-white shadow">
+                <div class="bg-white shadow shrink-0">
                     <div class="px-6 py-4">
                         {{ $header }}
                     </div>
@@ -40,9 +40,10 @@
             @endisset
 
             {{-- Page Content --}}
-            <main class="flex-1 p-6">
+            <main class="flex-1 p-6 overflow-y-auto">
                 {{ $slot }}
             </main>
+
         </div>
     </div>
 </body>

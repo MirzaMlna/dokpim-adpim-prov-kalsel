@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Modifikasi Pengguna
+            Edit User
         </h2>
     </x-slot>
 
@@ -9,13 +9,12 @@
         <div class="bg-white p-6 rounded shadow">
 
             <form method="POST" action="{{ route('users.update', $user) }}" class="space-y-4">
-
                 @csrf
                 @method('PUT')
 
                 <div>
-                    <label class="block text-sm font-medium">Kode</label>
-                    <input name="kode" value="{{ old('kode', $user->kode) }}" class="w-full border rounded p-2"
+                    <label class="block text-sm font-medium">Code</label>
+                    <input name="code" value="{{ old('code', $user->code) }}" class="w-full border rounded p-2"
                         required>
                 </div>
 
@@ -38,13 +37,13 @@
 
                 <div>
                     <label class="block text-sm font-medium">Tanggal Lahir</label>
-                    <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir', $user->tanggal_lahir) }}"
+                    <input type="date" name="birth_date" value="{{ old('birth_date', $user->birth_date) }}"
                         class="w-full border rounded p-2">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium">Jabatan</label>
-                    <input name="jabatan" value="{{ old('jabatan', $user->jabatan) }}"
+                    <input name="position" value="{{ old('position', $user->position) }}"
                         class="w-full border rounded p-2">
                 </div>
 

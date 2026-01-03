@@ -11,13 +11,13 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'kode',
+        'code',
         'name',
         'email',
         'nip',
-        'tanggal_lahir',
-        'jabatan',
-        'foto',
+        'birth_date',
+        'position',
+        'photo',
         'role',
         'password',
     ];
@@ -31,7 +31,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'tanggal_lahir'     => 'date',
+            'birth_date'        => 'date',
             'password'          => 'hashed',
         ];
     }

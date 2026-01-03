@@ -16,14 +16,13 @@ class UserSeeder extends Seeder
     {
         DB::table('users')->insert([
             [
-                // Identitas
-                'kode' => 'SA-001',
+                'code' => 'SA-001',
                 'name' => 'MUHAMMAD MIRZA MAULANA',
                 'email' => 'superadmin@dokpim.com',
                 'nip' => null,
-                'tanggal_lahir' => '1985-01-01',
-                'jabatan' => 'PJLP',
-                'foto' => null,
+                'birth_date' => '1985-01-01',
+                'position' => 'PJLP',
+                'photo' => null,
                 'role' => 'super-admin',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'),
