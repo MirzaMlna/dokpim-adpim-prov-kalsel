@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -22,18 +24,22 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'code' => 'required|unique:users',
-            'name' => 'required|string',
-            'email' => 'required|email|unique:users',
-            'nip' => 'nullable|unique:users',
-            'birth_date' => 'nullable|date',
-            'position' => 'nullable|string',
-            'role' => 'required|in:super-admin,kepala,admin,staff',
-            'password' => 'required|min:8',
-            'photo' => 'nullable|string',
-            'created_at' => now(),
-            'updated_at' => now(),
+            'code'        => 'required|unique:users,code',
+            'name'        => 'required|string|max:255',
+            'email'       => 'required|email|unique:users,email',
+            'nip'         => 'nullable|unique:users,nip',
+            'birth_date'  => 'nullable|date',
+            'position'    => 'nullable|string|max:255',
+            'role'        => 'required|in:super-admin,kepala,admin,staff',
+            'password'    => 'required|min:8',
+            'photo'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
+
+        // Upload photo
+        if ($request->hasFile('photo')) {
+            $validated['photo'] = $request->file('photo')
+                ->store('users', 'public');
+        }
 
         $validated['password'] = Hash::make($validated['password']);
 
@@ -46,8 +52,15 @@ class UserController extends Controller
 
     public function show(User $user)
     {
-        return view('users.show', compact('user'));
+        $birthDate = $user->birth_date
+            ? Carbon::parse($user->birth_date)
+            : null;
+
+        $age = $birthDate ? $birthDate->age : null;
+
+        return view('users.show', compact('user', 'birthDate', 'age'));
     }
+
 
     public function edit(User $user)
     {
@@ -57,22 +70,33 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $validated = $request->validate([
-            'code' => 'required|unique:users,code,' . $user->id,
-            'name' => 'required|string',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'nip' => 'nullable|unique:users,nip,' . $user->id,
-            'birth_date' => 'nullable|date',
-            'position' => 'nullable|string',
-            'role' => 'required|in:super-admin,kepala,admin,staff',
-            'password' => 'nullable|min:8',
-            'photo' => 'nullable|string',
-            'updated_at' => now(),
+            'code'        => 'required|unique:users,code,' . $user->id,
+            'name'        => 'required|string|max:255',
+            'email'       => 'required|email|unique:users,email,' . $user->id,
+            'nip'         => 'nullable|unique:users,nip,' . $user->id,
+            'birth_date'  => 'nullable|date',
+            'position'    => 'nullable|string|max:255',
+            'role'        => 'required|in:super-admin,kepala,admin,staff',
+            'password'    => 'nullable|min:8',
+            'photo'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
+        // Update password jika diisi
         if ($request->filled('password')) {
             $validated['password'] = Hash::make($request->password);
         } else {
             unset($validated['password']);
+        }
+
+        // Update photo
+        if ($request->hasFile('photo')) {
+            // Hapus foto lama
+            if ($user->photo) {
+                Storage::disk('public')->delete($user->photo);
+            }
+
+            $validated['photo'] = $request->file('photo')
+                ->store('users', 'public');
         }
 
         $user->update($validated);
@@ -84,6 +108,10 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
+        if ($user->photo) {
+            Storage::disk('public')->delete($user->photo);
+        }
+
         $user->delete();
 
         return redirect()

@@ -42,9 +42,17 @@
                                     <td class="px-4 py-3 whitespace-nowrap">
                                         <div class="flex items-center gap-3">
                                             <div
-                                                class="w-9 h-9 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-semibold">
-                                                {{ strtoupper(substr($user->name, 0, 1)) }}
+                                                class="w-9 h-9 rounded-full overflow-hidden flex items-center justify-center
+            bg-slate-200 text-slate-700 font-semibold">
+
+                                                @if ($user->photo)
+                                                    <img src="{{ asset('storage/' . $user->photo) }}"
+                                                        alt="{{ $user->name }}" class="w-full h-full object-cover">
+                                                @else
+                                                    {{ strtoupper(substr($user->name, 0, 1)) }}
+                                                @endif
                                             </div>
+
                                             <div>
                                                 <div class="font-medium text-gray-800">{{ $user->name }}</div>
                                                 <div class="text-xs text-gray-500">{{ $user->code }}</div>
